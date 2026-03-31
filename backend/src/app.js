@@ -12,6 +12,7 @@ app.use(express.json()) // parse the json file in incoming request
 
 //import routes
 app.use("/api/v1/users", userRouter)
+
 // example rout -> http://localhost:3000/api/v1/users/register
 
 export default app; //so that other files can use it

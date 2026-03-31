@@ -1,7 +1,7 @@
 // in this we translate raw javascript data into sql queries
 
 import connectDB from "../../config/database.js";
-
+import bcrypt from "bcrypt"
 //here we dont use export default because this file will have multiple functions and not a single important function, so when we import we have to use the SAME NAME of function as defined here, otherwise error -> [import anyName from "../model/user.model.js"] IS WRONG!!
 
 //import { createUser, findUser } from "../model/user.model.js" IS THE CORRECT WAY
@@ -11,6 +11,8 @@ export const createUser = async (userData) => {
 
     const { username, email, password } = userData; //Destructuring, same name as keys in js object
 
+    const hashedPassword = await bcrypt.hash(password, 10)
+
     const query = `
       INSERT INTO users (username, email, password)
       VALUES (?, ?, ?) 
@@ -19,7 +21,7 @@ export const createUser = async (userData) => {
     const [result] = await connection.execute(query, [
       username,
       email,
-      password
+      hashedPassword
     ]); //result = response[0]
 
     return result;
