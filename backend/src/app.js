@@ -4,6 +4,8 @@ import express from "express"; //since we are using type module, we will use imp
 // import express library
 import userRouter from './routes/user.routes.js'
 
+import postRouter from "./routes/post.routes.js";
+
 const app = express(); //create an express app
 
 //Adds middleware to parse JSON
@@ -13,6 +15,7 @@ app.use(express.json()) // parse the json file in incoming request
 //import routes
 app.use("/api/v1/users", userRouter)
 
+app.use("/api/v1/posts", postRouter);
 // example rout -> http://localhost:3000/api/v1/users/register
 
 export default app; //so that other files can use it
