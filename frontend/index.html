@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>✨ Full Stack Playground</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1f1c2c, #928dab);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      color: white;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+      letter-spacing: 1px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(15px);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      transition: 0.2s;
+    }
+
+    input::placeholder {
+      color: rgba(255,255,255,0.7);
+    }
+
+    input:focus {
+      background: rgba(255,255,255,0.25);
+      transform: scale(1.02);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #ff7eb3, #ff758c);
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(255, 118, 136, 0.6);
+    }
+
+    ul {
+      margin-top: 10px;
+      list-style: none;
+    }
+
+    li {
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>🚀 Full Stack Playground</h1>
+
+    <div class="grid">
+
+      <div class="card">
+        <h2>Register</h2>
+        <input id="reg-username" placeholder="Username">
+        <input id="reg-email" placeholder="Email">
+        <input id="reg-password" placeholder="Password">
+        <button onclick="register()">Register</button>
+      </div>
+
+      <div class="card">
+        <h2>Login</h2>
+        <input id="login-email" placeholder="Email">
+        <input id="login-password" placeholder="Password">
+        <button onclick="login()">Login</button>
+      </div>
+
+      <div class="card">
+        <h2>Create Post</h2>
+        <input id="post-name" placeholder="Name">
+        <input id="post-desc" placeholder="Description">
+        <input id="post-age" placeholder="Age">
+        <button onclick="createPost()">Create Post</button>
+      </div>
+
+      <div class="card">
+        <h2>All Posts</h2>
+        <button onclick="getPosts()">Load Posts</button>
+        <ul id="posts-list"></ul>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const BASE_URL = "http://localhost:3000/api/v1";
+
+    async function register() {
+      try {
+        const username = document.getElementById("reg-username").value;
+        const email = document.getElementById("reg-email").value;
+        const password = document.getElementById("reg-password").value;
+
+        const res = await fetch(`${BASE_URL}/users/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, email, password })
+        });
+
+        const data = await res.json();
+        alert(JSON.stringify(data));
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    async function login() {
+      try {
+        const email = document.getElementById("login-email").value;
+        const password = document.getElementById("login-password").value;
+
+        const res = await fetch(`${BASE_URL}/users/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+        alert(JSON.stringify(data));
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    async function createPost() {
+      try {
+        const name = document.getElementById("post-name").value;
+        const description = document.getElementById("post-desc").value;
+        const age = document.getElementById("post-age").value;
+
+        const res = await fetch(`${BASE_URL}/posts/create`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, description, age })
+        });
+
+        const data = await res.json();
+        alert(JSON.stringify(data));
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    async function getPosts() {
+      const res = await fetch(`${BASE_URL}/posts/getPosts`);
+      const data = await res.json();
+
+      const list = document.getElementById("posts-list");
+      list.innerHTML = "";
+
+      data.forEach(post => {
+        const li = document.createElement("li");
+        li.innerText = `${post.name} - ${post.description} (${post.age})`;
+        list.appendChild(li);
+      });
+    }
+  </script>
+
+</body>
+</html>
