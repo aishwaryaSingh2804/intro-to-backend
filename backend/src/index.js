@@ -4,7 +4,11 @@ import connectDB from "../config/database.js"; //.js as we are using module
 
 const startServer = async()=>{
     try {
-        await connectDB()
+        await connectDB() //connect to DB
+
+        //app ie an instance of express library is an event emitter ie if an event like an error occurs, it will emit a string "error"
+        //i want to use event listener on for event of an error
+        //if an error occurs even before the server has started, we want to kill the process an handle it
         app.on("error", (error)=>{
             console.log("ERROR", error);
             throw error

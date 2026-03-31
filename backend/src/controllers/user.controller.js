@@ -1,7 +1,8 @@
-
+//request handling is done here, data is extracted from request, it is validated and then work is done and response is sent back
 import { createUser, findUserByEmail } from "../models/user.model.js";
 
-export const registerUser = async (req, res) => {
+export const registerUser = async (req, res) => { //req is express object having several key value pairs like body, params, query etc. the body contains the request
+  
   try {
     // 1. Get data from request body
     const { username, email, password } = req.body;
@@ -17,7 +18,7 @@ export const registerUser = async (req, res) => {
     const existingUser = await findUserByEmail(email.toLowerCase());
 
     if (existingUser) {
-      return res.status(400).json({
+      return res.status(400).json({ // 400 = bad client request
         message: "User already exists"
       });
     }
